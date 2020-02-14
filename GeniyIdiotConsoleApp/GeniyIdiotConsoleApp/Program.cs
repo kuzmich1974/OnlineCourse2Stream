@@ -42,6 +42,7 @@ namespace GeniyIdiotConsoleApp
                 repeatTest = AgainOrFinish();
             }
             AskAboutShowStatistic();
+            Console.ReadKey();
         }
 
         static void RunTest()
