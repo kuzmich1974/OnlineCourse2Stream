@@ -1,44 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace GeniyIdiotConsoleApp
+namespace Traning
 {
     class Program
     {
-        static string[] GetQuestions(int countQuestions)
+        static void Main(string[] args)
         {
-            // добавил комментарий длдя теста
-            string[] questions = new string[countQuestions];
-            questions[0] = "Сколько будет два плюс два  умноженное на два?";
-            questions[1] = "Бревно нужно распилить на 10  частей, сколько надо сделать  распилов?";
-            questions[2] = "На двух руках 10 пальцев. Сколько пальцев на 5 руках?";
-            questions[3] = "Укол делают каждые полчаса,  сколько нужно минут для трех  уколов?";
-            questions[4] = "Пять свечей горело, две  потухли. Сколько свечей  осталось?";
-
-            return questions;
-        }
-        //Удалил неиспользуемые string [] args
-        static void Main()
-        {
+            Console.WriteLine("Введите ваше фамилию, имя и отчество");
+            string[] initials = Console.ReadLine().Split(' ');
+            Console.WriteLine();
             int countQuestions = 5;
-            string[] questions = GetQuestions(countQuestions);
-
-            int[] answers = new int[countQuestions];
-            answers[0] = 6;
-            answers[1] = 9;
-            answers[2] = 25;
-            answers[3] = 60;
-            answers[4] = 2;
-
+            List<string> questions = GetQuestions(countQuestions);
+            int[] answers = GetAnswers(countQuestions);
+            string[] diagnoses = GetDiagnoses(6);
             int countRightAnswer = 0;
 
-            for (int i = 0; i < countQuestions; i++)
+            for (int index = 0; index < countQuestions; index++)
             {
-                Console.WriteLine("Вопрос №" + (i + 1));
+                Console.WriteLine("Вопрос №" + (index + 1) + ":");
                 int randomQuestionIndex = GetRandomQuestionIndex(countQuestions);
                 Console.WriteLine(questions[randomQuestionIndex]);
+                questions.RemoveAt(randomQuestionIndex);
 
                 int userAnswer = Convert.ToInt32(Console.ReadLine());
-
                 int rightAnswer = answers[randomQuestionIndex];
 
                 if (userAnswer == rightAnswer)
@@ -46,17 +34,45 @@ namespace GeniyIdiotConsoleApp
                     countRightAnswer++;
                 }
             }
-            //test
-            string[] diagnoses = new string[6];
+
+            Console.WriteLine("\n" + initials[1] + " " + initials[2] + ", ваш диагноз: " + diagnoses[countRightAnswer]);
+        }
+
+        static List<string> GetQuestions(int countQuestions)
+        {
+            var questions = new List<string>(countQuestions)
+            {
+                [0] = "Сколько будет два плюс два умноженные на два?",
+                [1] = "Бревно нужно распилить на десять частей, сколько надо сделать распилов?",
+                [2] = "На 2 руках 10 пальцев. Сколько пальцев на 5 руках?",
+                [3] = "Укол делают каждые пол часа, сколько нужно минут для трех уколов?",
+                [4] = "Пять свечей горело, две потухли. Сколько свечей осталось?"
+            };
+            return questions;
+        }
+
+        static int[] GetAnswers(int countQuestions)
+        {
+            int[] answers = new int[countQuestions];
+            answers[0] = 6;
+            answers[1] = 9;
+            answers[2] = 25;
+            answers[3] = 60;
+            answers[4] = 2;
+            return answers;
+        }
+
+        static string[] GetDiagnoses(int countDiagnoses)
+        {
+            string[] diagnoses = new string[countDiagnoses];
             diagnoses[0] = "Идиот";
             diagnoses[1] = "Кретин";
             diagnoses[2] = "Дурак";
             diagnoses[3] = "Нормальный";
             diagnoses[4] = "Талант";
             diagnoses[5] = "Гений";
-            Console.WriteLine("Ваш диагноз:" + diagnoses[countRightAnswer]);
 
-            Console.ReadKey();
+            return diagnoses;
         }
 
         static int GetRandomQuestionIndex(int countQuestions)
