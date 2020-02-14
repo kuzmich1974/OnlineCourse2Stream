@@ -1,12 +1,12 @@
 ﻿using System;
 
 namespace GeniyIdiotConsoleApp
-{
+{   // test
     class Program
     {
         static string[] GetQuestions(int countQuestions)
         {
-            // добавил комментарий длдя теста
+            // добавил комментарий для теста
             string[] questions = new string[countQuestions];
             questions[0] = "Сколько будет два плюс два  умноженное на два?";
             questions[1] = "Бревно нужно распилить на 10  частей, сколько надо сделать  распилов?";
