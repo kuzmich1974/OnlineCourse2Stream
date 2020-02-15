@@ -14,7 +14,7 @@ namespace Traning
             string[] initials = Console.ReadLine().Split(' ');
             Console.WriteLine();
             int countQuestions = 5;
-            string[] questions = GetQuestions(countQuestions);
+            List<string> questions = GetQuestions(countQuestions);
             int[] answers = GetAnswers(countQuestions);
             string[] diagnoses = GetDiagnoses(6);
             int countRightAnswer = 0;
@@ -24,8 +24,14 @@ namespace Traning
                 Console.WriteLine("Вопрос №" + (index + 1) + ":");
                 int randomQuestionIndex = GetRandomQuestionIndex(countQuestions);
                 Console.WriteLine(questions[randomQuestionIndex]);
+                questions.RemoveAt(randomQuestionIndex);
 
-                int userAnswer = Convert.ToInt32(Console.ReadLine());
+                int userAnswer;
+                do
+                {
+                    Console.WriteLine(questions[randomQuestionIndex]);
+                }
+                while (!int.TryParse(Console.ReadLine(), out userAnswer));
                 int rightAnswer = answers[randomQuestionIndex];
 
                 if (userAnswer == rightAnswer)
@@ -37,15 +43,16 @@ namespace Traning
             Console.WriteLine("\n" + initials[1] + " " + initials[2] + ", ваш диагноз: " + diagnoses[countRightAnswer]);
         }
 
-        static string[] GetQuestions(int countQuestions)
+        static List<string> GetQuestions(int countQuestions)
         {
-            string[] questions = new string[countQuestions];
-            questions[0] = "Сколько будет два плюс два умноженные на два?";
-            questions[1] = "Бревно нужно распилить на десять частей, сколько надо сделать распилов?";
-            questions[2] = "На 2 руках 10 пальцев. Сколько пальцев на 5 руках?";
-            questions[3] = "Укол делают каждые пол часа, сколько нужно минут для трех уколов?";
-            questions[4] = "Пять свечей горело, две потухли. Сколько свечей осталось?";
-
+            var questions = new List<string>(countQuestions)
+            {
+                [0] = "Сколько будет два плюс два умноженные на два?",
+                [1] = "Бревно нужно распилить на десять частей, сколько надо сделать распилов?",
+                [2] = "На 2 руках 10 пальцев. Сколько пальцев на 5 руках?",
+                [3] = "Укол делают каждые пол часа, сколько нужно минут для трех уколов?",
+                [4] = "Пять свечей горело, две потухли. Сколько свечей осталось?"
+            };
             return questions;
         }
 
