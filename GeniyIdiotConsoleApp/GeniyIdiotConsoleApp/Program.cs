@@ -10,11 +10,12 @@ namespace GenIdiConsoleApp
     {
         static void Main(string[] args)
         {
-            int countQuestions = 5; // количество вопросов и ответов
-            string[] questions = GetQuestions(countQuestions); //массив вопросов через обращение к вопроснику
-            int[] answers = GetAnswers(countQuestions); // массив ответов через обращение к пулу ответов 
-            int[] indexOrder = GetRandomOrder(countQuestions);
-            int countRightAnswers = 0; // счетчик правильных ответов
+            //Рабочая ветка. Не путать с master!
+            int countQuestions = 5; 
+            string[] questions = GetQuestions(countQuestions); 
+            int[] answers = GetAnswers(countQuestions); 
+            List<int> indexOrder = GetRandomOrder(countQuestions);
+            int countRightAnswers = 0; 
 
 
             for (int i = 0; i < countQuestions; i++)
@@ -24,17 +25,17 @@ namespace GenIdiConsoleApp
                 int randomQuestionIndex = indexOrder[i]; 
                 Console.WriteLine(questions[randomQuestionIndex]);
                 int usAnswer = СheckUserAnswer();
-                int rightAnswer = answers[randomQuestionIndex]; //достаем ответ с тем же индексом что и вопрос 
+                int rightAnswer = answers[randomQuestionIndex]; 
                 if (usAnswer == rightAnswer)
                 {
                     countRightAnswers++;
                 }
             }
-            string[] diagnoses = GetDiagnoses(countQuestions + 1); // обращаемся к пулу диагнозов           
+            string[] diagnoses = GetDiagnoses(countQuestions + 1);           
             Console.WriteLine("Ваш диагноз: " + diagnoses[countRightAnswers]);
 
         }
-        static string[] GetQuestions(int countQuestions) //Создаём вопросник
+        static string[] GetQuestions(int countQuestions) 
         {
             string[] questions = new string[countQuestions];
             questions[0] = "Сколько будет два плюс два умноженное на два?";
@@ -44,7 +45,7 @@ namespace GenIdiConsoleApp
             questions[4] = "Пять свечей горело, дву потухли. Сколько свечей осталось?";
             return questions;
         }
-        static int[] GetAnswers(int countQuestions) //Создаём пул ответов
+        static int[] GetAnswers(int countQuestions) 
         {
             int[] answers = new int[countQuestions];
             answers[0] = 6;
@@ -54,7 +55,7 @@ namespace GenIdiConsoleApp
             answers[4] = 2;
             return answers;
         }
-        static string[] GetDiagnoses(int countQuestions) // Создаём пул диагнозов
+        static string[] GetDiagnoses(int countQuestions) 
         {
             string[] diagnoses = new string[countQuestions + 1];
             diagnoses[0] = "Идиот";
@@ -65,14 +66,14 @@ namespace GenIdiConsoleApp
             diagnoses[5] = "Гений";
             return diagnoses;
         }
-        static int[] GetRandomOrder(int countQuestions)//создаем массив со случайным неповторяющимся порядком будущих индексов вопросов и ответов
+        static List<int> GetRandomOrder(int countQuestions)
         {
             List<int> digits = (new int[] { }).ToList();
             for (int i = 0; i < countQuestions; i++)
             {
                 digits.Add(i);
             }
-            int[] randomIndex = new int[countQuestions];
+            List<int> randomIndex = (new List<int>(countQuestions) { });
             int digit;
 
             Random rnd = new Random();
@@ -80,11 +81,11 @@ namespace GenIdiConsoleApp
             {
                 digit = digits[rnd.Next(digits.Count)];
                 digits.Remove(digit);
-                randomIndex[i] = digit;
+                randomIndex.Add(digit);
             }
             return randomIndex;
         }
-        static int СheckUserAnswer()//Защита от некорректного ввода формата ответа
+        static int СheckUserAnswer()
         {
             int userAnswer;
             string input = Console.ReadLine();
