@@ -94,11 +94,6 @@ namespace GeniyIdiotConsoleApp
             SaveDiagnose(fio, countRightAnswers, diagnose);
         }
 
-    static void onTimeEvent(Object source, ElapsedEventArgs e)
-    {
-        
-    }
-
         static void AskAboutRepeatTest()
         {
             Console.ForegroundColor = ConsoleColor.Green;
