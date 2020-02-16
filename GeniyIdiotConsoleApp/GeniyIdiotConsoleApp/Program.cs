@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Timers;
 
 namespace GeniyIdiotConsoleApp
 {
@@ -20,18 +21,6 @@ namespace GeniyIdiotConsoleApp
             "Гений"
         };
 
-        static (string question, int answer)[] questionsAndAnswersDataBase = new (string question, int answer)[]
-        {
-            ("сколько будет два плюс два умноженное на два?",                          6 ),
-            ("Бревно нужно распилить на 10 частей, сколько надо сделать распилов?",    9 ),
-            ("На двух руках 10 пальцев. Сколько пальцев на 5 руках?",                 25 ),
-            ("Укол делают каждые пол-часа, сколько нужно минут для трёх уколов?",     60 ),
-            ("Пять свечей горело, 2 потухли. Сколько свечей осталось?",                2 ),
-            ("Одно яйцо варится 4 мин. Сколько минут надо варить 6 яиц?",              4 ),
-            ("Сколько месяцев в году имеют 28 дней?",                                 12 ),
-            ("У семерых братьев по сестре. Сколько всего сестёр?",                     1 )
-        };
-
         static void Main()
         {
             bool repeatTest = true;
@@ -49,11 +38,7 @@ namespace GeniyIdiotConsoleApp
 
         static void StartInitialize()
         {
-            questionsAndAnswers = new List<(string question, int answer)>();
-            foreach (var coupleAnswerAndQuestion in questionsAndAnswersDataBase)
-            {
-                questionsAndAnswers.Add(coupleAnswerAndQuestion);
-            }
+            questionsAndAnswers = GetAnswersAndQuestions();
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("------------------------------------------------------------");
@@ -62,7 +47,24 @@ namespace GeniyIdiotConsoleApp
             Console.ResetColor();
             Console.WriteLine("Введите ФИО:");
             fio = Console.ReadLine();
+            Console.WriteLine("Нажмите любую клавишу для начала теста...");
+            Console.ReadKey();
             DrawSplitter();
+        }
+
+        static List<(string question, int answer)> GetAnswersAndQuestions()
+        {
+            return new List<(string question, int answer)>
+            {
+                ("сколько будет два плюс два умноженное на два?",                          6 ),
+                ("Бревно нужно распилить на 10 частей, сколько надо сделать распилов?",    9 ),
+                ("На двух руках 10 пальцев. Сколько пальцев на 5 руках?",                 25 ),
+                ("Укол делают каждые пол-часа, сколько нужно минут для трёх уколов?",     60 ),
+                ("Пять свечей горело, 2 потухли. Сколько свечей осталось?",                2 ),
+                ("Одно яйцо варится 4 мин. Сколько минут надо варить 6 яиц?",              4 ),
+                ("Сколько месяцев в году имеют 28 дней?",                                 12 ),
+                ("У семерых братьев по сестре. Сколько всего сестёр?",                     1 )
+            };
         }
 
         static void RunTest()
@@ -70,6 +72,9 @@ namespace GeniyIdiotConsoleApp
             int countRightAnswers = 0;
             int countQuestions = questionsAndAnswers.Count;
 
+            Timer timer = new Timer(10000);
+            timer.AutoReset = false;
+            timer.Elapsed += onTimeEvent;
             for (int i = 0; i < countQuestions; i++)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -78,18 +83,29 @@ namespace GeniyIdiotConsoleApp
 
                 int randomIndex = GetRandomIndex(questionsAndAnswers.Count);
                 Console.WriteLine(questionsAndAnswers[randomIndex].question);
-                int userAnswer = GetInputAnswerDigitFormat();
+
                 int rightAnswer = questionsAndAnswers[randomIndex].answer;
+
+                timer.Start();
+                
+                int userAnswer = GetInputAnswerDigitFormat();
+
                 if (userAnswer == rightAnswer)
                 {
                     countRightAnswers++;
                 }
+
                 questionsAndAnswers.RemoveAt(randomIndex);
             }
             string diagnose = GetDiagnose(countQuestions, countRightAnswers);
             WriteDiagnose(diagnose, countRightAnswers);
             SaveDiagnose(fio, countRightAnswers, diagnose);
         }
+
+    static void onTimeEvent(Object source, ElapsedEventArgs e)
+    {
+        
+    }
 
         static void AskAboutRepeatTest()
         {
