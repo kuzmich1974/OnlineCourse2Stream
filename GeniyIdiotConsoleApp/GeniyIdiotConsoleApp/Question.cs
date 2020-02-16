@@ -45,6 +45,8 @@ public class Question
     }
 }
 
+// --------------------------------------------------------------
+// Question collection
 // include or inheritanse ? 
 public class Questions : IEnumerable<Question>
 {

@@ -32,7 +32,7 @@ public class GameUserUI
         return userInput;
     }
 
-    public static void ShowResult(int rightAnswerCount)
+    public static void ShowDiagnose(int rightAnswerCount)
     {
         Console.WriteLine();
         Console.WriteLine("Поздравляю {0} - Вы {1}!", gamerName, Diagnoses[rightAnswerCount]);

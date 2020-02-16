@@ -23,7 +23,7 @@ class Program
             game.ShuffleQuestions();
             game.Play();
 
-            GameUserUI.ShowResult(game.Diagnose);
+            GameUserUI.ShowDiagnose(game.Diagnose);
         }
         while (GameUserUI.QuitPrompt());
     }
