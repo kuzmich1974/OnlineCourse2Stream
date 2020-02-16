@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Timers;
 
 namespace GeniyIdiotConsoleApp
 {
@@ -72,9 +71,6 @@ namespace GeniyIdiotConsoleApp
             int countRightAnswers = 0;
             int countQuestions = questionsAndAnswers.Count;
 
-            Timer timer = new Timer(10000);
-            timer.AutoReset = false;
-            timer.Elapsed += onTimeEvent;
             for (int i = 0; i < countQuestions; i++)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -84,12 +80,8 @@ namespace GeniyIdiotConsoleApp
                 int randomIndex = GetRandomIndex(questionsAndAnswers.Count);
                 Console.WriteLine(questionsAndAnswers[randomIndex].question);
 
-                int rightAnswer = questionsAndAnswers[randomIndex].answer;
-
-                timer.Start();
-                
+                int rightAnswer = questionsAndAnswers[randomIndex].answer; 
                 int userAnswer = GetInputAnswerDigitFormat();
-
                 if (userAnswer == rightAnswer)
                 {
                     countRightAnswers++;
