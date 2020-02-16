@@ -31,8 +31,9 @@ namespace GenIdiConsoleApp
                     countRightAnswers++;
                 }
             }
+            int percentForDiagnoses = GetPercentOfRigthAnswers(countRightAnswers, countQuestions);
             string[] diagnoses = GetDiagnoses(countQuestions + 1);           
-            Console.WriteLine("Ваш диагноз: " + diagnoses[countRightAnswers]);
+            Console.WriteLine("Ваш диагноз: " + diagnoses[percentForDiagnoses]);
 
         }
         static string[] GetQuestions(int countQuestions) 
@@ -95,7 +96,38 @@ namespace GenIdiConsoleApp
             else
                 Console.WriteLine("Некорректный формат ответа. Попробуйте ответить еще раз.");
                 return СheckUserAnswer();
-        }     
+        }
+        static int GetPercentOfRigthAnswers (double countRightAnswers, double countQuestions)
+        {
+            double percentOfRightAnswers = ((countRightAnswers / countQuestions) * 100);
+            int counterForDiagnoses = 0;
+            if (percentOfRightAnswers == 0)
+            {
+                counterForDiagnoses = 0;               
+            }
+            else if (percentOfRightAnswers > 0 && percentOfRightAnswers <= 20)
+            {
+                counterForDiagnoses = 1;
+            }
+            else if (percentOfRightAnswers > 20 && percentOfRightAnswers <= 40)
+            {
+                counterForDiagnoses = 2;
+            }
+            else if (percentOfRightAnswers > 40 && percentOfRightAnswers <= 60)
+            {
+                counterForDiagnoses = 3;
+            }
+            else if (percentOfRightAnswers > 60 && percentOfRightAnswers <= 80)
+            {
+                counterForDiagnoses = 4;
+            }
+            else if (percentOfRightAnswers > 80 && percentOfRightAnswers <= 100)
+            {
+                counterForDiagnoses = 5;
+            }
+            
+            return counterForDiagnoses;
+        }
 
     }
 }
