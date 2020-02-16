@@ -9,8 +9,7 @@ namespace GenIdiConsoleApp
     class Program
     {
         static void Main(string[] args)
-        {
-            //Рабочая ветка. Не путать с master!
+        {           
             int countQuestions = 5; 
             string[] questions = GetQuestions(countQuestions); 
             int[] answers = GetAnswers(countQuestions); 
