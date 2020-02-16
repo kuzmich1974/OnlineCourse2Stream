@@ -13,7 +13,7 @@ namespace GenIdiConsoleApp
             int countQuestions = 5; // количество вопросов и ответов
             string[] questions = GetQuestions(countQuestions); //массив вопросов через обращение к вопроснику
             int[] answers = GetAnswers(countQuestions); // массив ответов через обращение к пулу ответов 
-            int[] digits = GetRandomOrder(countQuestions);// массив со случаным порядком индексов вопросов и ответов
+            int[] indexOrder = GetRandomOrder(countQuestions);
             int countRightAnswers = 0; // счетчик правильных ответов
 
 
@@ -21,10 +21,10 @@ namespace GenIdiConsoleApp
             {
 
                 Console.WriteLine("Вопрос № " + (i + 1));
-                int randQuestInd = digits[i]; // рандомный индекс вопроса из массива вопросов
-                Console.WriteLine(questions[randQuestInd]);
+                int randomQuestionIndex = indexOrder[i]; 
+                Console.WriteLine(questions[randomQuestionIndex]);
                 int usAnswer = СheckUserAnswer();
-                int rightAnswer = answers[randQuestInd]; //достаем ответ с тем же индексом что и вопрос 
+                int rightAnswer = answers[randomQuestionIndex]; //достаем ответ с тем же индексом что и вопрос 
                 if (usAnswer == rightAnswer)
                 {
                     countRightAnswers++;
@@ -67,8 +67,12 @@ namespace GenIdiConsoleApp
         }
         static int[] GetRandomOrder(int countQuestions)//создаем массив со случайным неповторяющимся порядком будущих индексов вопросов и ответов
         {
-            List<int> digits = (new int[] { 0, 1, 2, 3, 4 }).ToList();
-            int[] randInd = new int[countQuestions];
+            List<int> digits = (new int[] { }).ToList();
+            for (int i = 0; i < countQuestions; i++)
+            {
+                digits.Add(i);
+            }
+            int[] randomIndex = new int[countQuestions];
             int digit;
 
             Random rnd = new Random();
@@ -76,23 +80,21 @@ namespace GenIdiConsoleApp
             {
                 digit = digits[rnd.Next(digits.Count)];
                 digits.Remove(digit);
-                randInd[i] = digit;
+                randomIndex[i] = digit;
             }
-            return randInd;
+            return randomIndex;
         }
         static int СheckUserAnswer()//Защита от некорректного ввода формата ответа
         {
-            try
-            {
-                int usAnswer = Convert.ToInt32(Console.ReadLine());
-                return usAnswer;
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Некорректный ввод. Попробуйте ответить еще раз.");
+            int userAnswer;
+            string input = Console.ReadLine();
+            bool result = int.TryParse(input, out userAnswer);
+            if (result == true)
+                return userAnswer;
+            else
+                Console.WriteLine("Некорректный формат ответа. Попробуйте ответить еще раз.");
                 return СheckUserAnswer();
-            }
-        }
+        }     
 
     }
 }
