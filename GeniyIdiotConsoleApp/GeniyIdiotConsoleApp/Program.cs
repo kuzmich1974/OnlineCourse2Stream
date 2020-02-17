@@ -71,7 +71,7 @@ namespace GeniyIdiotConsoleApp
         {
             int countRightAnswers = 0;
             int countQuestions = questionsAndAnswers.Count;
-
+            bool timeIsOut = false;
             for (int i = 0; i < countQuestions; i++)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -83,7 +83,7 @@ namespace GeniyIdiotConsoleApp
 
                 int rightAnswer = questionsAndAnswers[randomIndex].answer;
 
-                Timer timer = new Timer((object obj) => {Console.WriteLine("Время вышло"); continue;}, null, 5000, -1);
+                Timer timer = new Timer((object obj) => {Console.WriteLine("Время вышло"); timeIsOut = true; }, null, 5000, Timeout.Infinite);
 
                 int userAnswer = GetInputAnswerDigitFormat();
                 timer.Change(Timeout.Infinite, Timeout.Infinite);
