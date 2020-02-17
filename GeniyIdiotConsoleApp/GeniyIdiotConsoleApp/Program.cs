@@ -160,10 +160,7 @@ namespace GeniyIdiotConsoleApp
             }
         }
 
-        static void DrawSplitter()
-        {
-            Console.WriteLine("---------------------------------------------------------------------------");
-        }
+        static void DrawSplitter() => Console.WriteLine("---------------------------------------------------------------------------");
 
         static int GetInputAnswerDigitFormat()
         {
