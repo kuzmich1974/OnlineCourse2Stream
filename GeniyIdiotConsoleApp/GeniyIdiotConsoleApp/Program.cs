@@ -37,7 +37,7 @@ namespace GeniyIdiotConsoleApp
 
         static void StartInitialize()
         {
-            questionsAndAnswers = GetAnswersAndQuestions();
+            questionsAndAnswers = GetQuestionsAndAnswers();
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("------------------------------------------------------------");
@@ -51,7 +51,7 @@ namespace GeniyIdiotConsoleApp
             DrawSplitter();
         }
 
-        static List<(string question, int answer)> GetAnswersAndQuestions()
+        static List<(string question, int answer)> GetQuestionsAndAnswers()
         {
             return new List<(string question, int answer)>
             {
@@ -190,7 +190,6 @@ namespace GeniyIdiotConsoleApp
 
         static void WriteDiagnose(string diagnose, int countRightAnswers)
         {
-
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Число правильных ответов: " + countRightAnswers + ".");
             Console.WriteLine("Ваш диагноз: " + diagnose);
