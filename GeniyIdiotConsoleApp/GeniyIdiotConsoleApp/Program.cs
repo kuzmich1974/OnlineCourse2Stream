@@ -90,8 +90,8 @@ namespace GeniyIdiotConsoleApp
                 questionsAndAnswers.RemoveAt(randomIndex);
             }
             string diagnose = GetDiagnose(countQuestions, countRightAnswers);
-            WriteDiagnose(diagnose, countRightAnswers);
-            SaveDiagnose(fio, countRightAnswers, diagnose);
+            ShowDiagnose(diagnose, countRightAnswers);
+            SaveDiagnoseToFile(fio, countRightAnswers, diagnose);
         }
 
         static void AskAboutRepeatTest()
@@ -151,10 +151,9 @@ namespace GeniyIdiotConsoleApp
                 DrawSplitter();
                 Console.WriteLine("| {0, -35} | {1, -20} | {2, -10} |", "ФИО", "Число верных ответов", "Диагноз");
                 DrawSplitter();
-                string line;
-                while ((line = sr.ReadLine()) != null)
+                while (!sr.EndOfStream)
                 {
-                    Console.WriteLine(line);
+                    Console.WriteLine(sr.ReadLine());
                     DrawSplitter();
                 }
             }
@@ -188,7 +187,7 @@ namespace GeniyIdiotConsoleApp
             return diagnoses[diagnoseIndex];
         }
 
-        static void WriteDiagnose(string diagnose, int countRightAnswers)
+        static void ShowDiagnose(string diagnose, int countRightAnswers)
         {
 
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -196,7 +195,7 @@ namespace GeniyIdiotConsoleApp
             Console.WriteLine("Ваш диагноз: " + diagnose);
         }
 
-        static void SaveDiagnose(string fio, int countRightAnswers, string diagnose)
+        static void SaveDiagnoseToFile(string fio, int countRightAnswers, string diagnose)
         {
             using (StreamWriter sw = new StreamWriter(filePath, true))
             {
