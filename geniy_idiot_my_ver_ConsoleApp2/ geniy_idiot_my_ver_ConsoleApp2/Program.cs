@@ -11,7 +11,7 @@ namespace geniy_idiot_my_ver_ConsoleApp2
             int volumeDiagnose = 6;
             int cntRightAnswer = 0;
             int randomQuestion = 0;     
-            / /      MA ZA L ALKZ RNTCNFOLTNKODTE
+            //      MA ZA L ALKZ RNTCNFOLTNKODTE
             string[] questions = new string[questionVolume];
             questions[0] = "Сколько будет два плюс два умноженное на два";
             questions[1] = "Бревно нужно распилить на 10 частей, сколько надо сделать распилов?";
