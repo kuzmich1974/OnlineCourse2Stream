@@ -10,7 +10,7 @@ namespace GeniyIdiotConsoleApp
         static string filePath = "statistic.txt";
         static string fio;
         static List<(string question, int answer)> questionsAndAnswers;
-  
+
         static string[] diagnoses = new string[]
         {
             "Идиот",
@@ -24,7 +24,7 @@ namespace GeniyIdiotConsoleApp
         static void Main()
         {
             bool repeatTest = true;
-            
+
             while (repeatTest)
             {
                 StartInitialize();
@@ -38,7 +38,7 @@ namespace GeniyIdiotConsoleApp
 
         static void StartInitialize()
         {
-            questionsAndAnswers = GetQuestionsAndAnswers();
+            questionsAndAnswers = GetAnswersAndQuestions();
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("------------------------------------------------------------");
@@ -47,23 +47,25 @@ namespace GeniyIdiotConsoleApp
             Console.ResetColor();
             Console.WriteLine("Введите ФИО:");
             fio = Console.ReadLine();
-            Console.WriteLine("Нажмите любую клавишу для начала теста...");
+            Console.WriteLine("У вас будет по 10 секунд для ответа на каждый вопрос.\nНажмите любую клавишу для начала теста...");
             Console.ReadKey();
             DrawSplitter();
         }
 
-        static List<(string question, int answer)> GetQuestionsAndAnswers()
+        static List<(string question, int answer)> GetAnswersAndQuestions()
         {
             return new List<(string question, int answer)>
             {
-                ("сколько будет два плюс два умноженное на два?",                          6 ),
-                ("Бревно нужно распилить на 10 частей, сколько надо сделать распилов?",    9 ),
-                ("На двух руках 10 пальцев. Сколько пальцев на 5 руках?",                 25 ),
-                ("Укол делают каждые пол-часа, сколько нужно минут для трёх уколов?",     60 ),
-                ("Пять свечей горело, 2 потухли. Сколько свечей осталось?",                2 ),
-                ("Одно яйцо варится 4 мин. Сколько минут надо варить 6 яиц?",              4 ),
-                ("Сколько месяцев в году имеют 28 дней?",                                 12 ),
-                ("У семерых братьев по сестре. Сколько всего сестёр?",                     1 )
+                ("сколько будет два плюс два умноженное на два?",                                     6 ),
+                ("Бревно нужно распилить на 10 частей, сколько надо сделать распилов?",               9 ),
+                ("На двух руках 10 пальцев. Сколько пальцев на 5 руках?",                            25 ),
+                ("Укол делают каждые пол-часа, сколько нужно минут для трёх уколов?",                60 ),
+                ("Пять свечей горело, 2 потухли. Сколько свечей осталось?",                           2 ),
+                ("Одно яйцо варится 4 мин. Сколько минут надо варить 6 яиц?",                         4 ),
+                ("Сколько месяцев в году имеют 28 дней?",                                            12 ),
+                ("У семерых братьев по сестре. Сколько всего сестёр?",                                1 ),
+                ("У фермера было 17 овец. Все, кроме 10 умерли. Сколько овец осталось у фермера?",   10 ),
+                ("Сколько яиц можно съесть натощак?",                                                 1 )
             };
         }
 
@@ -71,8 +73,8 @@ namespace GeniyIdiotConsoleApp
         {
             int countRightAnswers = 0;
             int countQuestions = questionsAndAnswers.Count;
-            bool timeIsOut = false;
-            for (int i = 0; i < countQuestions; i++)
+            int i = 0;
+            while (i < countQuestions)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Вопрос N" + (i + 1));
@@ -80,24 +82,66 @@ namespace GeniyIdiotConsoleApp
 
                 int randomIndex = GetRandomIndex(questionsAndAnswers.Count);
                 Console.WriteLine(questionsAndAnswers[randomIndex].question);
-
                 int rightAnswer = questionsAndAnswers[randomIndex].answer;
 
-                Timer timer = new Timer((object obj) => {Console.WriteLine("Время вышло"); timeIsOut = true; }, null, 5000, Timeout.Infinite);
-
-                int userAnswer = GetInputAnswerDigitFormat();
-                timer.Change(Timeout.Infinite, Timeout.Infinite);
-                timer.Dispose();
-                if (userAnswer == rightAnswer)
+                string stringAnswer = "";
+                bool answerReceived = false;
+                bool timeIsOut = false;
+                using (Timer timer = new Timer((object obj) => { Console.WriteLine("\nВремя вышло..."); timeIsOut = true; i++; }, null, 10000, Timeout.Infinite))
                 {
-                    countRightAnswers++;
+                    while (!timeIsOut)
+                    {
+                        if (Console.KeyAvailable)
+                        {
+                            ConsoleKeyInfo keyInfo = Console.ReadKey();
+                            switch (keyInfo.Key)
+                            {
+                                case ConsoleKey.Enter:
+                                    Console.WriteLine();
+                                    if (int.TryParse(stringAnswer, out int userAnswer))
+                                    {
+                                        answerReceived = true;
+                                        if (userAnswer == rightAnswer)
+                                        {
+                                            countRightAnswers++;
+                                        }
+                                        i++;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        stringAnswer = "";
+                                        Console.WriteLine("\nОтвет должен быть целым числом!\nИспользуйте только цифры и клавишу Enter для ввода ответа:");
+                                    }
+                                    break;
+                                case ConsoleKey.Backspace:
+                                    if (stringAnswer.Length > 0)
+                                    {
+                                        Console.Write("\b \b");
+                                        stringAnswer = stringAnswer.Remove(stringAnswer.Length - 1);
+                                    }
+                                    break;
+                                default:
+                                    if (char.IsDigit(keyInfo.KeyChar))
+                                    {
+                                        stringAnswer += keyInfo.KeyChar;
+                                    }
+                                    else
+                                    {
+                                        stringAnswer = "";
+                                        Console.WriteLine("\nОтвет должен быть целым числом!\nИспользуйте только цифры и клавишу Enter для ввода ответа:");
+                                    }
+                                    break;
+                            }
+                        }
+                        if (answerReceived) break;
+                    }
                 }
-                
                 questionsAndAnswers.RemoveAt(randomIndex);
             }
             string diagnose = GetDiagnose(countQuestions, countRightAnswers);
-            WriteDiagnose(diagnose, countRightAnswers);
-            SaveDiagnose(fio, countRightAnswers, diagnose);
+            ShowDiagnose(diagnose, countRightAnswers);
+            SaveDiagnoseToFile(fio, countRightAnswers, diagnose);
         }
 
         static void AskAboutRepeatTest()
@@ -157,25 +201,17 @@ namespace GeniyIdiotConsoleApp
                 DrawSplitter();
                 Console.WriteLine("| {0, -35} | {1, -20} | {2, -10} |", "ФИО", "Число верных ответов", "Диагноз");
                 DrawSplitter();
-                string line;
-                while ((line = sr.ReadLine()) != null)
+                while (!sr.EndOfStream)
                 {
-                    Console.WriteLine(line);
+                    Console.WriteLine(sr.ReadLine());
                     DrawSplitter();
                 }
             }
         }
 
-        static void DrawSplitter() => Console.WriteLine("---------------------------------------------------------------------------");
-
-        static int GetInputAnswerDigitFormat()
+        static void DrawSplitter()
         {
-            int inputNumber;
-            while (!int.TryParse(Console.ReadLine(), out inputNumber))
-            {
-                Console.WriteLine("Ответ должен быть целым числом! \nПопробуйте ответить ещё раз:");
-            }
-            return inputNumber;
+            Console.WriteLine("---------------------------------------------------------------------------");
         }
 
         static string GetDiagnose(int countQuestions, int countRightAnswers)
@@ -194,14 +230,15 @@ namespace GeniyIdiotConsoleApp
             return diagnoses[diagnoseIndex];
         }
 
-        static void WriteDiagnose(string diagnose, int countRightAnswers)
+        static void ShowDiagnose(string diagnose, int countRightAnswers)
         {
+
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Число правильных ответов: " + countRightAnswers + ".");
             Console.WriteLine("Ваш диагноз: " + diagnose);
         }
 
-        static void SaveDiagnose(string fio, int countRightAnswers, string diagnose)
+        static void SaveDiagnoseToFile(string fio, int countRightAnswers, string diagnose)
         {
             using (StreamWriter sw = new StreamWriter(filePath, true))
             {
