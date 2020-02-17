@@ -10,60 +10,69 @@ namespace GenIdiConsoleApp
     {
         static void Main(string[] args)
         {           
-            int countQuestions = 5; 
-            string[] questions = GetQuestions(countQuestions); 
-            int[] answers = GetAnswers(countQuestions); 
-            List<int> indexOrder = GetRandomOrder(countQuestions);
-            int countRightAnswers = 0; 
-
-
-            for (int i = 0; i < countQuestions; i++)
+            int countQuestions = 5;
+            int numberForRepeat;
+            
+            do
             {
+                List<string> questions = GetQuestions(countQuestions);
+                List<int> answers = GetAnswers(countQuestions);
+                List<int> indexOrder = GetRandomOrder(countQuestions);
+                int countRightAnswers = 0;
 
-                Console.WriteLine("Вопрос № " + (i + 1));
-                int randomQuestionIndex = indexOrder[i]; 
-                Console.WriteLine(questions[randomQuestionIndex]);
-                int usAnswer = СheckUserAnswer();
-                int rightAnswer = answers[randomQuestionIndex]; 
-                if (usAnswer == rightAnswer)
+
+                for (int i = 0; i < countQuestions; i++)
                 {
-                    countRightAnswers++;
-                }
-            }
-            int percentForDiagnoses = GetPercentOfRigthAnswers(countRightAnswers, countQuestions);
-            string[] diagnoses = GetDiagnoses(countQuestions + 1);           
-            Console.WriteLine("Ваш диагноз: " + diagnoses[percentForDiagnoses]);
 
+                    Console.WriteLine("Вопрос № " + (i + 1));
+                    int randomQuestionIndex = indexOrder[i];
+                    Console.WriteLine(questions[randomQuestionIndex]);
+                    int userAnswer = СheckUserAnswer();
+                    int rightAnswer = answers[randomQuestionIndex];
+                    if (userAnswer == rightAnswer)
+                    {
+                        countRightAnswers++;
+                    }
+                }
+                int percentForDiagnoses = GetPercentOfRigthAnswers(countRightAnswers, countQuestions);
+                List<string> diagnoses = GetDiagnoses(countQuestions + 1);
+                Console.WriteLine("Ваш диагноз: " + diagnoses[percentForDiagnoses]);                
+                Console.WriteLine("Если вы хотите пройти тест ещё раз - нажмите клавишу 1");
+                Console.WriteLine("Для завершения тестирования - нажмите любую другую клавишу");
+                string input = Console.ReadLine();
+                int.TryParse(input, out numberForRepeat);
+            }
+            while (numberForRepeat == 1);
         }
-        static string[] GetQuestions(int countQuestions) 
+        static List<string> GetQuestions(int countQuestions) 
         {
-            string[] questions = new string[countQuestions];
-            questions[0] = "Сколько будет два плюс два умноженное на два?";
-            questions[1] = "Бревно надо распилить на 10 частей. Сколько надо сделать распилов?";
-            questions[2] = "На двух руках 10 пальцев. Сколько пальцев на 5 руках?";
-            questions[3] = "Укол делают каждые полчаса. Сколько нужно минут для трёх уколов?";
-            questions[4] = "Пять свечей горело, дву потухли. Сколько свечей осталось?";
+            List<string> questions = (new List<string>(countQuestions) { });
+            questions.Add("Сколько будет два плюс два умноженное на два?");
+            questions.Add("Бревно надо распилить на 10 частей. Сколько надо сделать распилов?");
+            questions.Add("На двух руках 10 пальцев. Сколько пальцев на 5 руках?");
+            questions.Add("Укол делают каждые полчаса. Сколько нужно минут для трёх уколов?");
+            questions.Add("Пять свечей горело, дву потухли. Сколько свечей осталось?");
             return questions;
         }
-        static int[] GetAnswers(int countQuestions) 
+        static List<int> GetAnswers(int countQuestions) 
         {
-            int[] answers = new int[countQuestions];
-            answers[0] = 6;
-            answers[1] = 9;
-            answers[2] = 25;
-            answers[3] = 60;
-            answers[4] = 2;
+            List<int> answers = (new List<int>(countQuestions) { });
+            answers.Add(6);
+            answers.Add(9);
+            answers.Add(25);
+            answers.Add(60);
+            answers.Add(2);
             return answers;
         }
-        static string[] GetDiagnoses(int countQuestions) 
+        static List<string> GetDiagnoses(int countQuestions)
         {
-            string[] diagnoses = new string[countQuestions + 1];
-            diagnoses[0] = "Идиот";
-            diagnoses[1] = "Кретин";
-            diagnoses[2] = "Дурак";
-            diagnoses[3] = "Нормальный";
-            diagnoses[4] = "Талант";
-            diagnoses[5] = "Гений";
+            List<string> diagnoses = (new List<string>(countQuestions + 1) { });
+            diagnoses.Add("Идиот");
+            diagnoses.Add("Кретин");
+            diagnoses.Add("Дурак");
+            diagnoses.Add("Нормальный");
+            diagnoses.Add("Талант");
+            diagnoses.Add("Гений");
             return diagnoses;
         }
         static List<int> GetRandomOrder(int countQuestions)
@@ -99,34 +108,10 @@ namespace GenIdiConsoleApp
         static int GetPercentOfRigthAnswers (double countRightAnswers, double countQuestions)
         {
             double percentOfRightAnswers = ((countRightAnswers / countQuestions) * 100);
-            int counterForDiagnoses = 0;
-            if (percentOfRightAnswers == 0)
-            {
-                counterForDiagnoses = 0;               
-            }
-            else if (percentOfRightAnswers > 0 && percentOfRightAnswers <= 20)
-            {
-                counterForDiagnoses = 1;
-            }
-            else if (percentOfRightAnswers > 20 && percentOfRightAnswers <= 40)
-            {
-                counterForDiagnoses = 2;
-            }
-            else if (percentOfRightAnswers > 40 && percentOfRightAnswers <= 60)
-            {
-                counterForDiagnoses = 3;
-            }
-            else if (percentOfRightAnswers > 60 && percentOfRightAnswers <= 80)
-            {
-                counterForDiagnoses = 4;
-            }
-            else if (percentOfRightAnswers > 80 && percentOfRightAnswers <= 100)
-            {
-                counterForDiagnoses = 5;
-            }
-            
+            int counterForDiagnoses = (Convert.ToInt32(percentOfRightAnswers) / 20);            
             return counterForDiagnoses;
         }
+        
 
     }
 }
