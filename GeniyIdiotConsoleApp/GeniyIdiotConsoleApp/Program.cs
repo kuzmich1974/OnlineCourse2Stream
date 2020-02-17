@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace GeniyIdiotConsoleApp
 {
@@ -23,7 +24,7 @@ namespace GeniyIdiotConsoleApp
         static void Main()
         {
             bool repeatTest = true;
-
+            
             while (repeatTest)
             {
                 StartInitialize();
@@ -80,13 +81,18 @@ namespace GeniyIdiotConsoleApp
                 int randomIndex = GetRandomIndex(questionsAndAnswers.Count);
                 Console.WriteLine(questionsAndAnswers[randomIndex].question);
 
-                int rightAnswer = questionsAndAnswers[randomIndex].answer; 
+                int rightAnswer = questionsAndAnswers[randomIndex].answer;
+
+                Timer timer = new Timer((object obj) => {Console.WriteLine("Время вышло"); continue;}, null, 5000, -1);
+
                 int userAnswer = GetInputAnswerDigitFormat();
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
+                timer.Dispose();
                 if (userAnswer == rightAnswer)
                 {
                     countRightAnswers++;
                 }
-
+                
                 questionsAndAnswers.RemoveAt(randomIndex);
             }
             string diagnose = GetDiagnose(countQuestions, countRightAnswers);
