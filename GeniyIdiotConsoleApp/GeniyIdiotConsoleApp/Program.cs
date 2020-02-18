@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace GenyiIdiotConsoleApp
 {
@@ -43,11 +45,19 @@ namespace GenyiIdiotConsoleApp
 
             }
 
-            Console.WriteLine("\nА вот и результаты, " + name + ":  ваш диагноз: " + GetDiagnose(countRightAnswers));
+            int points = GetPoints(countQuestions, countRightAnswers);
 
+            Console.WriteLine("\n" + name + ", вы справились. Ваши результаты:" +
+                "\nПравильных ответов: " + countRightAnswers + " из " + countQuestions +
+                "\nНабранных баллов: " + points +
+                "\nВаш диагноз: " + GetDiagnose(points));
 
-            Console.ReadKey();
+            Console.WriteLine("\n" + name + ", не хотите ли пройти тест ещё раз?" +
+                "\nНажмите кнопку 'Y' если да, любую другую - если нет.");
+
+            WhetherToRestart(Console.ReadLine());
         }
+
 
 
         static List<string> GetQuestions()
@@ -116,18 +126,33 @@ namespace GenyiIdiotConsoleApp
             questions.RemoveAt(randomQuestionIndex);
         }
 
-        static string GetDiagnose(int countRightAnswers)
+        static string GetDiagnose(int points)  // Теперь выводит по баллам
         {
             string[] diagnoses = new string[6];
 
-            diagnoses[0] = "Идиот.";
-            diagnoses[1] = "Кретин.";
-            diagnoses[2] = "Дурак.";
-            diagnoses[3] = "Нормальный.";
-            diagnoses[4] = "Талант.";
-            diagnoses[5] = "Гений.";
+            diagnoses[0] = "Идиот.";       // 0 - 19
+            diagnoses[1] = "Кретин.";      // 20 - 39
+            diagnoses[2] = "Дурак.";       // 40 - 59
+            diagnoses[3] = "Нормальный.";  // 60 - 79
+            diagnoses[4] = "Талант.";      // 80 - 99
+            diagnoses[5] = "Гений.";       // 100 баллов
 
-            return diagnoses[countRightAnswers];
+            int index = points / (100 / (diagnoses.Length - 1));
+
+            return diagnoses[index];
+        }
+
+        static int GetPoints(int countQuestions, int countRightAnswers)  // Расчёт баллов
+        {
+            int points = countRightAnswers * 100 / countQuestions;
+
+            return points;
+        }
+
+        static void WhetherToRestart(string YorN)  // Перезапуск программы
+        {
+            if (YorN == "Y" || YorN == "y") Process.Start(Assembly.GetExecutingAssembly().Location);            
+            Environment.Exit(0);
         }
     }
 }
