@@ -89,7 +89,7 @@ namespace GeniyIdiotConsoleApp
                 bool timeIsOut = false;
                 using (Timer timer = new Timer((object obj) => { Console.WriteLine("\nВремя вышло..."); timeIsOut = true; i++; }, null, 10000, Timeout.Infinite))
                 {
-                    while (!timeIsOut)
+                    while (!timeIsOut && !answerReceived)
                     {
                         if (Console.KeyAvailable)
                         {
@@ -134,7 +134,6 @@ namespace GeniyIdiotConsoleApp
                                     break;
                             }
                         }
-                        if (answerReceived) break;
                     }
                 }
                 questionsAndAnswers.RemoveAt(randomIndex);
