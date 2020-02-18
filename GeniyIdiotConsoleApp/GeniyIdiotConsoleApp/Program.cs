@@ -17,9 +17,11 @@ namespace GenyiIdiotConsoleApp
 
             Console.WriteLine("Здравствуйте! Представтесь, пожалуйста:");
 
-            string name = Console.ReadLine();
-
-            Greeting(name);
+            string name = NameValidation(Console.ReadLine());
+            
+            Console.WriteLine("\nОчень приятно " + name + ". Предлагаю сыграть со мной в игру." +
+                              "\nВаша задача ответить на несколько несложных вопросов, а после я выведу диагноз, насколько вы... кхм... дееспособны." +
+                              "\nИтак, как только будете готовы, нажмите любую клавишу, чтобы продолжить.");
 
             Console.ReadKey(true);
 
@@ -41,13 +43,11 @@ namespace GenyiIdiotConsoleApp
 
             }
 
-            Console.WriteLine("\nНе знаю как вам эта новость " + name + ", но ваш диагноз: " + GetDiagnose(countRightAnswers));
+            Console.WriteLine("\nА вот и результаты, " + name + ":  ваш диагноз: " + GetDiagnose(countRightAnswers));
 
-            Comments(countRightAnswers);
 
             Console.ReadKey();
         }
-
 
 
         static List<string> GetQuestions()
@@ -76,11 +76,18 @@ namespace GenyiIdiotConsoleApp
             return answers;
         }
 
-        static void Greeting(string name)
+        static string NameValidation(string name)
         {
-            Console.WriteLine("\nОчень приятно " + name + ". Предлагаю сыграть со мной в игру." +
-                "\nВаша задача ответить на несколько несложных вопросов, а после я выведу диагноз, насколько вы... кхм... дееспособны." +
-                "\nИтак как только будете готовы, нажмите любую клавишу, чтобы продолжить.");
+            while (true)
+            {
+                bool isSpace = string.IsNullOrWhiteSpace(name);
+
+                if (!isSpace) return name;
+
+                Console.WriteLine("Вы ввели пустую строку. Попробуйте ещё раз:");
+
+                name = Console.ReadLine();
+            }
         }
 
         static int GetRandomQuestionIndex(int x)
@@ -121,20 +128,6 @@ namespace GenyiIdiotConsoleApp
             diagnoses[5] = "Гений.";
 
             return diagnoses[countRightAnswers];
-        }
-
-        static void Comments(int countRightAnswers)
-        {
-            string[] comments = new string[6];
-
-            comments[0] = "Мда... Что называется \"No comments.\"";
-            comments[1] = "Не огорчайтесь - вам ещё есть куда падать.";
-            comments[2] = "На самом деле вы не одиноки в этом, если подойдёте к зеркалу, то в нём увидите ещё одного.";
-            comments[3] = "Ну это насчёт ваших умственных способностей, насчёт психического здоровья я не уверен.";
-            comments[4] = "Вопросы были слишком простыми, не обольщайтесь.";
-            comments[5] = "Я всего лишь программа, написанная не самым умелым индивидом. Так что не верьте моему мнению.";
-
-            Console.WriteLine(comments[countRightAnswers]);
         }
     }
 }
