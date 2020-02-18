@@ -19,11 +19,11 @@ namespace GenyiIdiotConsoleApp
 
             Console.WriteLine("Здравствуйте! Представтесь, пожалуйста:");
 
-            string name = NameValidation(Console.ReadLine());
+            string name = UserNameValidation(Console.ReadLine());  // Проверка имени, чтобы оно не было пустым
             
-            Console.WriteLine("\nОчень приятно " + name + ". Предлагаю сыграть со мной в игру." +
-                              "\nВаша задача ответить на несколько несложных вопросов, а после я выведу диагноз, насколько вы... кхм... дееспособны." +
-                              "\nИтак, как только будете готовы, нажмите любую клавишу, чтобы продолжить.");
+            Console.WriteLine("{0}Очень приятно " + name + ". Предлагаю сыграть со мной в игру. " +
+                "{0}Ваша задача ответить на несколько несложных вопросов, а после я выведу диагноз, насколько вы... кхм... дееспособны. " +
+                "{0}Итак, как только будете готовы, нажмите любую клавишу, чтобы продолжить.", Environment.NewLine);
 
             Console.ReadKey(true);
 
@@ -35,7 +35,7 @@ namespace GenyiIdiotConsoleApp
 
                 Console.WriteLine(questions[randomQuestionIndex]);
 
-                int userAnswer = ValidationCheck(Console.ReadLine());
+                int userAnswer = UserAnswerValidation();
 
                 int rightAnswer = answers[randomQuestionIndex];
 
@@ -47,13 +47,13 @@ namespace GenyiIdiotConsoleApp
 
             int points = GetPoints(countQuestions, countRightAnswers);
 
-            Console.WriteLine("\n" + name + ", вы справились. Ваши результаты:" +
-                "\nПравильных ответов: " + countRightAnswers + " из " + countQuestions +
-                "\nНабранных баллов: " + points +
-                "\nВаш диагноз: " + GetDiagnose(points));
+            Console.WriteLine("{0}" + name + ", вы справились. Ваши результаты:" +
+                "{0}Правильных ответов: " + countRightAnswers + " из " + countQuestions +
+                "{0}Набранных баллов: " + points +
+                "{0}Ваш диагноз: " + GetDiagnose(points), Environment.NewLine);
 
-            Console.WriteLine("\n" + name + ", не хотите ли пройти тест ещё раз?" +
-                "\nНажмите кнопку 'Y' если да, любую другую - если нет.");
+            Console.WriteLine("{0}" + name + ", не хотите ли пройти тест ещё раз?" +
+                "{0}Нажмите кнопку 'Y' если да, любую другую - если нет.", Environment.NewLine);
 
             WhetherToRestart(Console.ReadLine());
         }
@@ -86,7 +86,7 @@ namespace GenyiIdiotConsoleApp
             return answers;
         }
 
-        static string NameValidation(string name)
+        static string UserNameValidation(string name)
         {
             while (true)
             {
@@ -106,18 +106,16 @@ namespace GenyiIdiotConsoleApp
             return random.Next(x);
         }
 
-        static int ValidationCheck(string userAnswer)
+        static int UserAnswerValidation()
         {
-            while (true)
+            int inputNumber;
+
+            while (!int.TryParse(Console.ReadLine(), out inputNumber))
             {
-                bool isNum = int.TryParse(userAnswer, out int num);
-
-                if (isNum) return num;
-
                 Console.WriteLine("Некоректный формат ответа, попробуйте ещё раз:");
-
-                userAnswer = Console.ReadLine();
             }
+
+            return inputNumber;
         }
 
         static void DeleteAskedQestion(List<string> questions, List<int> answers, int randomQuestionIndex)
