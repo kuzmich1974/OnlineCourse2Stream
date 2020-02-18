@@ -10,80 +10,139 @@ namespace Traning
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Введите ваше фамилию, имя и отчество");
-            string[] initials = Console.ReadLine().Split(' ');
-            Console.WriteLine();
-            int countQuestions = 5;
-            List<string> questions = GetQuestions(countQuestions);
-            int[] answers = GetAnswers(countQuestions);
-            string[] diagnoses = GetDiagnoses(6);
-            int countRightAnswer = 0;
-
-            for (int index = 0; index < countQuestions; index++)
+            List<string> result = new List<string>();
+            int count = 0;
+            while (count == 0)
             {
-                Console.WriteLine("Вопрос №" + (index + 1) + ":");
-                int randomQuestionIndex = GetRandomQuestionIndex(countQuestions);
-                Console.WriteLine(questions[randomQuestionIndex]);
-                questions.RemoveAt(randomQuestionIndex);
+                Console.WriteLine("Введите ваше фамилию, имя и отчество");
+                string[] initials = Console.ReadLine().Split(' ');
+                Console.WriteLine();
+                int countQuestions = 5;
+                List<string> questions = GetQuestions();
+                List<int> answers = GetAnswers();
+                int countRightAnswer = 0;
 
-                int userAnswer;
-                do
+                for (int index = 0; index < countQuestions; index++)
                 {
-                    Console.WriteLine(questions[randomQuestionIndex]);
+                    Console.WriteLine("Вопрос №" + (index + 1) + ":");
+                    int CountQuestionsInList = questions.Count;
+                    int randomQuestionIndex = GetRandomQuestionIndex(CountQuestionsInList);
+                    string randomQuestion = questions[randomQuestionIndex];
+
+                    int userAnswer = GetUserAnswer(randomQuestion);
+                    int rightAnswer = answers[randomQuestionIndex];
+
+                    questions.RemoveAt(randomQuestionIndex);
+                    answers.RemoveAt(randomQuestionIndex);
+
+                    if (userAnswer == rightAnswer)
+                    {
+                        countRightAnswer++;
+                    }
                 }
-                while (!int.TryParse(Console.ReadLine(), out userAnswer));
-                int rightAnswer = answers[randomQuestionIndex];
 
-                if (userAnswer == rightAnswer)
+                string diagnos = GetDiagnos(countRightAnswer, countQuestions);
+
+                Console.WriteLine("\n" + initials[1] + " " + initials[2] + ", ваш диагноз: " + diagnos + "\n");
+                result.Add("\n" + initials[0] + " " + initials[1] + " " + initials[2] + ". Правильных ответов: "  + countRightAnswer  + ". Диагноз: " + diagnos + "\n");
+   
+                string answerOnReplay = GetAnswerOnReplay();
+
+                if (answerOnReplay == "нет")
                 {
-                    countRightAnswer++;
+                    count++;
+                    string answerOnResult = GetAnswerOnResult();
+                    if (answerOnResult == "да")
+                    {
+                        for (int i = 0; i < result.Count; i++)
+                        {
+                            Console.WriteLine(result[i]);
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("***************************************************\n");
                 }
             }
 
-            Console.WriteLine("\n" + initials[1] + " " + initials[2] + ", ваш диагноз: " + diagnoses[countRightAnswer]);
         }
 
-        static List<string> GetQuestions(int countQuestions)
+        static List<string> GetQuestions()
         {
-            var questions = new List<string>(countQuestions)
+            var questions = new List<string>
             {
-                [0] = "Сколько будет два плюс два умноженные на два?",
-                [1] = "Бревно нужно распилить на десять частей, сколько надо сделать распилов?",
-                [2] = "На 2 руках 10 пальцев. Сколько пальцев на 5 руках?",
-                [3] = "Укол делают каждые пол часа, сколько нужно минут для трех уколов?",
-                [4] = "Пять свечей горело, две потухли. Сколько свечей осталось?"
+                "Сколько будет два плюс два умноженные на два?",
+                "Бревно нужно распилить на десять частей, сколько надо сделать распилов?",
+                "На 2 руках 10 пальцев. Сколько пальцев на 5 руках?",
+                "Укол делают каждые пол часа, сколько нужно минут для трех уколов?",
+                "Пять свечей горело, две потухли. Сколько свечей осталось?"
             };
             return questions;
         }
 
-        static int[] GetAnswers(int countQuestions)
+        static List<int> GetAnswers()
         {
-            int[] answers = new int[countQuestions];
-            answers[0] = 6;
-            answers[1] = 9;
-            answers[2] = 25;
-            answers[3] = 60;
-            answers[4] = 2;
+            var answers = new List<int> { 6, 9, 25, 60, 2 };
             return answers;
         }
 
-        static string[] GetDiagnoses(int countDiagnoses)
+        static string GetDiagnos(float countRightAnswer, float countQuestions)
         {
-            string[] diagnoses = new string[countDiagnoses];
-            diagnoses[0] = "Идиот";
-            diagnoses[1] = "Кретин";
-            diagnoses[2] = "Дурак";
-            diagnoses[3] = "Нормальный";
-            diagnoses[4] = "Талант";
-            diagnoses[5] = "Гений";
+            string diagnos = "";
+            float percentRightAnswers = countRightAnswer / countQuestions * 100;
+            if (percentRightAnswers <= 17 && percentRightAnswers > 0) { diagnos = "Идиот"; }
+            if (percentRightAnswers <= 34 && percentRightAnswers > 17) { diagnos = "Кретин"; }
+            if (percentRightAnswers <= 50 && percentRightAnswers > 34) { diagnos = "Дурак"; }
+            if (percentRightAnswers <= 67 && percentRightAnswers > 50) { diagnos = "Нормальный"; }
+            if (percentRightAnswers <= 83 && percentRightAnswers > 67) { diagnos = "Талант"; }
+            if (percentRightAnswers <= 100 && percentRightAnswers > 83) { diagnos = "Гений"; }
 
-            return diagnoses;
+            return diagnos;
         }
 
-        static int GetRandomQuestionIndex(int countQuestions)
+        static int GetRandomQuestionIndex(int CountQuestionsInList)
         {
             Random random = new Random();
-            return random.Next(0, countQuestions);
+            return random.Next(0, CountQuestionsInList);
         }
+
+        static int GetUserAnswer(string randomQuestion)
+        {
+            int userAnswer;
+            do
+                {
+                    Console.WriteLine(randomQuestion);
+                }
+                while (!int.TryParse(Console.ReadLine(), out userAnswer));
+            return userAnswer;
+        }
+
+        static string GetAnswerOnReplay()
+        {
+            string answerOnReplay;
+            do
+            {
+                Console.WriteLine("\nХотите пройти тест снова?\n\nЕсли хотите, введите: да\nЕсли не хотите, введите: нет\n");
+                answerOnReplay = Console.ReadLine();
+            }
+            while (answerOnReplay != "да" && answerOnReplay != "нет");
+            return answerOnReplay;
+        }
+
+        static string GetAnswerOnResult()
+        {
+            string answerOnResult;
+            do
+            {
+                Console.WriteLine("***************************************************");
+                Console.WriteLine("\nХотите посмотреть результаты теста?\n\nЕсли хотите, введите: да\nЕсли не хотите, введите: нет\n");
+                answerOnResult = Console.ReadLine();
+                Console.WriteLine();
+            }
+            while (answerOnResult != "да" && answerOnResult != "нет");
+            return answerOnResult;
+        }
+
     }
 }
