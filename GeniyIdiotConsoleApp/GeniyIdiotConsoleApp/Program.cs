@@ -33,6 +33,7 @@ namespace GeniyIdiotConsoleApp
                 repeatTest = AgainOrFinish();
             }
             AskAboutShowStatistic();
+            Console.WriteLine("Тест окончен. Для выхода из программы нажмите любую клавишу.");
             Console.ReadKey();
         }
 
@@ -47,16 +48,21 @@ namespace GeniyIdiotConsoleApp
             Console.ResetColor();
             Console.WriteLine("Введите ФИО:");
             fio = Console.ReadLine();
+            ShowRulesOfAnswer();
             Console.WriteLine("У вас будет по 10 секунд для ответа на каждый вопрос.\nНажмите любую клавишу для начала теста...");
             Console.ReadKey();
             DrawSplitter();
         }
 
+        static void ShowRulesOfAnswer() => Console.WriteLine("\nОтвет должен быть целым числом!\nИспользуйте только цифры и клавишу Enter для ввода ответа.");
+
+        static void DrawSplitter() => Console.WriteLine("---------------------------------------------------------------------------");
+
         static List<(string question, int answer)> GetAnswersAndQuestions()
         {
             return new List<(string question, int answer)>
             {
-                ("сколько будет два плюс два умноженное на два?",                                     6 ),
+                ("Сколько будет два плюс два умноженное на два?",                                     6 ),
                 ("Бревно нужно распилить на 10 частей, сколько надо сделать распилов?",               9 ),
                 ("На двух руках 10 пальцев. Сколько пальцев на 5 руках?",                            25 ),
                 ("Укол делают каждые пол-часа, сколько нужно минут для трёх уколов?",                60 ),
@@ -84,7 +90,7 @@ namespace GeniyIdiotConsoleApp
                 Console.WriteLine(questionsAndAnswers[randomIndex].question);
                 int rightAnswer = questionsAndAnswers[randomIndex].answer;
 
-                string stringAnswer = "";
+                string UserAnswer = "";
                 bool answerReceived = false;
                 bool timeIsOut = false;
                 using (Timer timer = new Timer((object obj) => { Console.WriteLine("\nВремя вышло..."); timeIsOut = true; i++; }, null, 10000, Timeout.Infinite))
@@ -98,10 +104,10 @@ namespace GeniyIdiotConsoleApp
                             {
                                 case ConsoleKey.Enter:
                                     Console.WriteLine();
-                                    if (int.TryParse(stringAnswer, out int userAnswer))
+                                    if (int.TryParse(UserAnswer, out int digitUserAnswer))
                                     {
                                         answerReceived = true;
-                                        if (userAnswer == rightAnswer)
+                                        if (digitUserAnswer == rightAnswer)
                                         {
                                             countRightAnswers++;
                                         }
@@ -110,26 +116,26 @@ namespace GeniyIdiotConsoleApp
                                     }
                                     else
                                     {
-                                        stringAnswer = "";
-                                        Console.WriteLine("\nОтвет должен быть целым числом!\nИспользуйте только цифры и клавишу Enter для ввода ответа:");
+                                        UserAnswer = "";
+                                        ShowRulesOfAnswer();
                                     }
                                     break;
                                 case ConsoleKey.Backspace:
-                                    if (stringAnswer.Length > 0)
+                                    if (UserAnswer.Length > 0)
                                     {
                                         Console.Write("\b \b");
-                                        stringAnswer = stringAnswer.Remove(stringAnswer.Length - 1);
+                                        UserAnswer = UserAnswer.Remove(UserAnswer.Length - 1);
                                     }
                                     break;
                                 default:
                                     if (char.IsDigit(keyInfo.KeyChar))
                                     {
-                                        stringAnswer += keyInfo.KeyChar;
+                                        UserAnswer += keyInfo.KeyChar;
                                     }
                                     else
                                     {
-                                        stringAnswer = "";
-                                        Console.WriteLine("\nОтвет должен быть целым числом!\nИспользуйте только цифры и клавишу Enter для ввода ответа:");
+                                        UserAnswer = "";
+                                        ShowRulesOfAnswer();
                                     }
                                     break;
                             }
@@ -206,11 +212,6 @@ namespace GeniyIdiotConsoleApp
                     DrawSplitter();
                 }
             }
-        }
-
-        static void DrawSplitter()
-        {
-            Console.WriteLine("---------------------------------------------------------------------------");
         }
 
         static string GetDiagnose(int countQuestions, int countRightAnswers)
