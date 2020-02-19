@@ -19,10 +19,10 @@ namespace GenyiIdiotConsoleApp
 
             Console.WriteLine("Здравствуйте! Представтесь, пожалуйста:");
 
-            string name = UserNameValidation(Console.ReadLine());  // Проверка имени, чтобы оно не было пустым
+            string name = UserNameValidation();
             
-            Console.WriteLine("{0}Очень приятно " + name + ". Предлагаю сыграть со мной в игру. " +
-                "{0}Ваша задача ответить на несколько несложных вопросов, а после я выведу диагноз, насколько вы... кхм... дееспособны. " +
+            Console.WriteLine("{0}Очень приятно " + name + ". Предлагаю сыграть со мной в игру." +
+                "{0}Ваша задача ответить на несколько несложных вопросов, а после я выведу диагноз, насколько вы... кхм... дееспособны." +
                 "{0}Итак, как только будете готовы, нажмите любую клавишу, чтобы продолжить.", Environment.NewLine);
 
             Console.ReadKey(true);
@@ -42,7 +42,6 @@ namespace GenyiIdiotConsoleApp
                 if (userAnswer == rightAnswer) countRightAnswers++;
 
                 DeleteAskedQestion(questions, answers, randomQuestionIndex);
-
             }
 
             int points = GetPoints(countQuestions, countRightAnswers);
@@ -86,18 +85,16 @@ namespace GenyiIdiotConsoleApp
             return answers;
         }
 
-        static string UserNameValidation(string name)
+        static string UserNameValidation()
         {
-            while (true)
+            string name;
+
+            while (string.IsNullOrEmpty(name = Console.ReadLine()))
             {
-                bool isSpace = string.IsNullOrWhiteSpace(name);
-
-                if (!isSpace) return name;
-
                 Console.WriteLine("Вы ввели пустую строку. Попробуйте ещё раз:");
-
-                name = Console.ReadLine();
             }
+
+            return name.Substring(0, 1).ToUpper() + (name.Length > 1 ? name.Substring(1).ToLower() : "");
         }
 
         static int GetRandomQuestionIndex(int x)
@@ -124,7 +121,7 @@ namespace GenyiIdiotConsoleApp
             questions.RemoveAt(randomQuestionIndex);
         }
 
-        static string GetDiagnose(int points)  // Теперь выводит по баллам
+        static string GetDiagnose(int points)
         {
             string[] diagnoses = new string[6];
 
