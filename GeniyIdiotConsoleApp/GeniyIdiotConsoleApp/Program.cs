@@ -10,6 +10,8 @@ namespace GeniyIdiotConsoleApp
         static string filePath = "statistic.txt";
         static string fio;
         static List<(string question, int answer)> questionsAndAnswers;
+        static bool answerReceived;
+        static bool timeIsOut;
 
         static string[] diagnoses = new string[]
         {
@@ -90,9 +92,9 @@ namespace GeniyIdiotConsoleApp
                 Console.WriteLine(questionsAndAnswers[randomIndex].question);
                 int rightAnswer = questionsAndAnswers[randomIndex].answer;
 
-                string UserAnswer = "";
-                bool answerReceived = false;
-                bool timeIsOut = false;
+                string userAnswer = "";
+                answerReceived = false;
+                timeIsOut = false;
                 using (Timer timer = new Timer((object obj) => { Console.WriteLine("\nВремя вышло..."); timeIsOut = true; i++; }, null, 10000, Timeout.Infinite))
                 {
                     while (!timeIsOut && !answerReceived)
@@ -104,7 +106,7 @@ namespace GeniyIdiotConsoleApp
                             {
                                 case ConsoleKey.Enter:
                                     Console.WriteLine();
-                                    if (int.TryParse(UserAnswer, out int digitUserAnswer))
+                                    if (int.TryParse(userAnswer, out int digitUserAnswer))
                                     {
                                         answerReceived = true;
                                         if (digitUserAnswer == rightAnswer)
@@ -112,31 +114,20 @@ namespace GeniyIdiotConsoleApp
                                             countRightAnswers++;
                                         }
                                         i++;
-                                        break;
                                     }
                                     else
                                     {
-                                        UserAnswer = "";
+                                        userAnswer = "";
                                         ShowRulesOfAnswer();
                                     }
                                     break;
+
                                 case ConsoleKey.Backspace:
-                                    if (UserAnswer.Length > 0)
-                                    {
-                                        Console.Write("\b \b");
-                                        UserAnswer = UserAnswer.Remove(UserAnswer.Length - 1);
-                                    }
+                                    ClearLastSymbolInAnswer(ref userAnswer);
                                     break;
+
                                 default:
-                                    if (char.IsDigit(keyInfo.KeyChar))
-                                    {
-                                        UserAnswer += keyInfo.KeyChar;
-                                    }
-                                    else
-                                    {
-                                        UserAnswer = "";
-                                        ShowRulesOfAnswer();
-                                    }
+                                    AddDigitSymbolInStringAnswer (keyInfo.KeyChar, ref userAnswer);
                                     break;
                             }
                         }
@@ -147,6 +138,29 @@ namespace GeniyIdiotConsoleApp
             string diagnose = GetDiagnose(countQuestions, countRightAnswers);
             ShowDiagnose(diagnose, countRightAnswers);
             SaveDiagnoseToFile(fio, countRightAnswers, diagnose);
+        }
+
+        static void ClearLastSymbolInAnswer(ref string stringAnswer)
+        {
+            if (stringAnswer.Length > 0)
+            {
+                Console.Write(" ");
+                Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                stringAnswer = stringAnswer.Remove(stringAnswer.Length - 1);
+            }
+        }
+
+        static void AddDigitSymbolInStringAnswer (char symbol, ref string stringAnswer)
+        {
+            if (char.IsDigit(symbol))
+            {
+                stringAnswer += symbol;
+            }
+            else
+            {
+                stringAnswer = "";
+                ShowRulesOfAnswer();
+            }
         }
 
         static void AskAboutRepeatTest()
