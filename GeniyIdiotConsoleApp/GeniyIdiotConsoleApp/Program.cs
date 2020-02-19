@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,53 +12,49 @@ namespace Traning
         static void Main(string[] args)
         {
             List<string> result = new List<string>();
-            int count = 0;
-            while (count == 0)
-            {
-                Console.WriteLine("Введите ваше фамилию, имя и отчество");
-                string[] initials = Console.ReadLine().Split(' ');
-                Console.WriteLine();
-                int countQuestions = 5;
+            var countProgramCompletion = 0;
+            while (countProgramCompletion == 0)
+            { 
+                string[] fullName = GetFullName(); 
                 List<string> questions = GetQuestions();
+                int countQuestions = questions.Count;
                 List<int> answers = GetAnswers();
-                int countRightAnswer = 0;
+                var countRightAnswer = 0;
 
-                for (int index = 0; index < countQuestions; index++)
+                for (var index = 0; index < countQuestions; index++)
                 {
                     Console.WriteLine("Вопрос №" + (index + 1) + ":");
-                    int CountQuestionsInList = questions.Count;
-                    int randomQuestionIndex = GetRandomQuestionIndex(CountQuestionsInList);
+                    int randomQuestionIndex = GetRandomQuestionIndex(questions.Count);
                     string randomQuestion = questions[randomQuestionIndex];
 
                     int userAnswer = GetUserAnswer(randomQuestion);
                     int rightAnswer = answers[randomQuestionIndex];
 
-                    questions.RemoveAt(randomQuestionIndex);
-                    answers.RemoveAt(randomQuestionIndex);
-
                     if (userAnswer == rightAnswer)
                     {
                         countRightAnswer++;
                     }
+
+                    questions.RemoveAt(randomQuestionIndex);
+                    answers.RemoveAt(randomQuestionIndex);
                 }
 
-                string diagnos = GetDiagnos(countRightAnswer, countQuestions);
+                string diagnose = GetDiagnose(countRightAnswer, countQuestions);
 
-                Console.WriteLine("\n" + initials[1] + " " + initials[2] + ", ваш диагноз: " + diagnos + "\n");
-                result.Add("\n" + initials[0] + " " + initials[1] + " " + initials[2] + ". Правильных ответов: "  + countRightAnswer  + ". Диагноз: " + diagnos + "\n");
-   
+                Console.WriteLine("\n" + fullName[1] + " " + fullName[2] + ", ваш диагноз: " + diagnose + "\n");
+                result.Add("\n" + fullName[0] + " " + fullName[1] + " " + fullName[2] + ". Правильных ответов: "  + countRightAnswer  + ". Диагноз: " + diagnose + "\n");
+                WriteResult(result);
+
+
                 string answerOnReplay = GetAnswerOnReplay();
 
                 if (answerOnReplay == "нет")
                 {
-                    count++;
+                    countProgramCompletion++;
                     string answerOnResult = GetAnswerOnResult();
                     if (answerOnResult == "да")
                     {
-                        for (int i = 0; i < result.Count; i++)
-                        {
-                            Console.WriteLine(result[i]);
-                        }
+                        ReadResult();
                     }
                 }
                 else
@@ -66,6 +63,14 @@ namespace Traning
                 }
             }
 
+        }
+
+        static string[] GetFullName ()
+        {
+            Console.WriteLine("Введите ваше фамилию, имя и отчество");
+            string[] fullName = Console.ReadLine().Split(' ');
+            Console.WriteLine();
+            return fullName;
         }
 
         static List<string> GetQuestions()
@@ -87,24 +92,24 @@ namespace Traning
             return answers;
         }
 
-        static string GetDiagnos(float countRightAnswer, float countQuestions)
+        static string GetDiagnose(int countRightAnswer, int countQuestions)
         {
-            string diagnos = "";
-            float percentRightAnswers = countRightAnswer / countQuestions * 100;
-            if (percentRightAnswers <= 17 && percentRightAnswers > 0) { diagnos = "Идиот"; }
-            if (percentRightAnswers <= 34 && percentRightAnswers > 17) { diagnos = "Кретин"; }
-            if (percentRightAnswers <= 50 && percentRightAnswers > 34) { diagnos = "Дурак"; }
-            if (percentRightAnswers <= 67 && percentRightAnswers > 50) { diagnos = "Нормальный"; }
-            if (percentRightAnswers <= 83 && percentRightAnswers > 67) { diagnos = "Талант"; }
-            if (percentRightAnswers <= 100 && percentRightAnswers > 83) { diagnos = "Гений"; }
+            var diagnose = "";
+            float percentRightAnswers = countRightAnswer * 100 / countQuestions;
+            if (percentRightAnswers <= 17 && percentRightAnswers >= 0) { diagnose = "Идиот"; }
+            if (percentRightAnswers <= 34 && percentRightAnswers > 17) { diagnose = "Кретин"; }
+            if (percentRightAnswers <= 50 && percentRightAnswers > 34) { diagnose = "Дурак"; }
+            if (percentRightAnswers <= 67 && percentRightAnswers > 50) { diagnose = "Нормальный"; }
+            if (percentRightAnswers <= 83 && percentRightAnswers > 67) { diagnose = "Талант"; }
+            if (percentRightAnswers <= 100 && percentRightAnswers > 83) { diagnose = "Гений"; }
 
-            return diagnos;
+            return diagnose;
         }
 
-        static int GetRandomQuestionIndex(int CountQuestionsInList)
+        static int GetRandomQuestionIndex(int countQuestionsInList)
         {
             Random random = new Random();
-            return random.Next(0, CountQuestionsInList);
+            return random.Next(0, countQuestionsInList);
         }
 
         static int GetUserAnswer(string randomQuestion)
@@ -144,5 +149,31 @@ namespace Traning
             return answerOnResult;
         }
 
+        static void WriteResult (List<string>result)
+        {
+            string writePath = @"C:\Users\Demi\Desktop\Учеба\OnlineCourse2Stream\GeniyIdiotConsoleApp\results.txt";
+            using (StreamWriter writeResult = new StreamWriter(writePath, true, System.Text.Encoding.Default))
+            {
+                for (var i = 0; i < result.Count; i++)
+                {
+                    writeResult.WriteLine(result[i]);
+                }
+            }
+        }
+
+        static void ReadResult ()
+        {
+            string path = @"C:\Users\Demi\Desktop\Учеба\OnlineCourse2Stream\GeniyIdiotConsoleApp\results.txt";
+            using (StreamReader reader = new StreamReader(path, System.Text.Encoding.Default))
+            {
+                string line = null;
+                do
+                {
+                    line = reader.ReadLine();
+                    Console.WriteLine(line);
+                }
+                while (line != null);
+            }
+        }
     }
 }
